@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.Event;
 
 public class LagerKistenListener implements Listener {
 
@@ -29,12 +30,16 @@ public class LagerKistenListener implements Listener {
         if (block == null) return;
 
         if (lagerKisteBlock.isLagerKiste(block)) {
-            event.setCancelled(true); // Normale Chest-Interaktion verhindern
+
+            // Neue Paper API: block interaction zuverlässig unterdrücken
+            event.setCancelled(true);
+            event.setUseInteractedBlock(Event.Result.DENY);
+            event.setUseItemInHand(Event.Result.DENY);
 
             // Modus der Kiste bestimmen
             LagerKisteBlock.Mode mode = lagerKisteBlock.getMode(block);
 
-            // GUI öffnen für Spieler
+            // GUI öffnen
             LagerKisteGUI.openGUI(plugin, player, block, mode);
 
             player.sendMessage("§eLagerKiste geöffnet (" + (mode != null ? mode.name() : "Unbekannt") + ")");
