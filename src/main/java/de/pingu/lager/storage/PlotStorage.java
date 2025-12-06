@@ -8,7 +8,7 @@ import java.util.List;
 public class PlotStorage {
 
     private final String plotId;
-    private final List<ItemStack> items;
+    private List<ItemStack> items;
 
     public PlotStorage(String plotId) {
         this.plotId = plotId;
@@ -17,15 +17,25 @@ public class PlotStorage {
 
     public PlotStorage(String plotId, List<ItemStack> items) {
         this.plotId = plotId;
-        this.items = new ArrayList<>(items);
+        this.items = new ArrayList<>(items != null ? items : new ArrayList<>());
     }
 
     public String getPlotId() {
         return plotId;
     }
 
+    /**
+     * Gibt eine Kopie zurück, damit nichts von außen kaputt gemacht wird.
+     */
     public List<ItemStack> getItems() {
-        return items;
+        return new ArrayList<>(items);
+    }
+
+    /**
+     * Setzt alle Items neu (API erwartet das).
+     */
+    public void setItems(List<ItemStack> items) {
+        this.items = (items != null) ? new ArrayList<>(items) : new ArrayList<>();
     }
 
     public void addItem(ItemStack item) {
