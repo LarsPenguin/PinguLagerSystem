@@ -17,7 +17,7 @@ public class PlotSquaredHandler {
 
     public PlotSquaredHandler(PinguLagerSystem plugin) {
         this.plugin = plugin;
-        this.plotAPI = PlotAPI.get(); // PlotAPI 1.55: get() liefert Singleton
+        this.plotAPI = PlotAPI.get(); // PlotAPI 1.55+: Singleton
     }
 
     /**
@@ -31,13 +31,14 @@ public class PlotSquaredHandler {
                 player.getLocation().getBlockY(),
                 player.getLocation().getBlockZ()
         );
-        return plotAPI.getPlot(loc); // 1.55 Core Methode
+        return plotAPI.getPlot(loc); // Core-Methode 1.55+
     }
 
     /**
      * Prüft, ob ein Spieler Besitzer eines Plots ist.
      */
     public boolean isOwner(Player player, Plot plot) {
+        if (plot == null) return false;
         PlotUser plotUser = plotAPI.wrapPlayer(player);
         return plot.getOwners().contains(plotUser.getUUID());
     }
@@ -46,6 +47,7 @@ public class PlotSquaredHandler {
      * Prüft, ob ein Spieler Mitglied eines Plots ist.
      */
     public boolean isMember(Player player, Plot plot) {
+        if (plot == null) return false;
         PlotUser plotUser = plotAPI.wrapPlayer(player);
         return plot.getMembers().contains(plotUser.getUUID());
     }
@@ -54,6 +56,7 @@ public class PlotSquaredHandler {
      * Beispiel-Methode zum Senden einer Nachricht an alle Spieler auf einem Plot.
      */
     public void broadcastToPlot(Plot plot, String message) {
+        if (plot == null) return;
         for (UUID uuid : plot.getPlayers()) {
             Player bukkitPlayer = Bukkit.getPlayer(uuid);
             if (bukkitPlayer != null) {
