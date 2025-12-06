@@ -2,7 +2,7 @@ package de.pingu.lager;
 
 import com.plotsquared.core.PlotAPI;
 import com.plotsquared.core.plot.Plot;
-import com.plotsquared.core.plot.PlotPlayer;
+import com.plotsquared.core.plot.PlotUser;
 import com.plotsquared.core.location.Location;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ public class PlotSquaredHandler {
      * Liefert den Plot, auf dem ein Spieler gerade steht.
      */
     public Optional<Plot> getPlotAtPlayer(Player player) {
-        PlotPlayer plotPlayer = plotAPI.wrapPlayer(player);
+        PlotUser plotUser = plotAPI.wrapPlayer(player);
         Location loc = new Location(player.getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
         return plotAPI.getPlot(loc);
     }
@@ -32,16 +32,16 @@ public class PlotSquaredHandler {
      * Prüft, ob ein Spieler Besitzer eines Plots ist.
      */
     public boolean isOwner(Player player, Plot plot) {
-        PlotPlayer plotPlayer = plotAPI.wrapPlayer(player);
-        return plot.getOwners().contains(plotPlayer.getUUID());
+        PlotUser plotUser = plotAPI.wrapPlayer(player);
+        return plot.getOwners().contains(plotUser.getUUID());
     }
 
     /**
      * Prüft, ob ein Spieler Mitglied eines Plots ist.
      */
     public boolean isMember(Player player, Plot plot) {
-        PlotPlayer plotPlayer = plotAPI.wrapPlayer(player);
-        return plot.getMembers().contains(plotPlayer.getUUID());
+        PlotUser plotUser = plotAPI.wrapPlayer(player);
+        return plot.getMembers().contains(plotUser.getUUID());
     }
 
     /**
