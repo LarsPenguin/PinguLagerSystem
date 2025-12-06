@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: "21"
-          distribution: "temurin"
+          distribution: temurin
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -32,7 +32,7 @@ jobs:
         run: mvn clean package
 
       - name: Upload JAR artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PinguLagerSystem
           path: target/PinguLagerSystem-1.0.0.jar
