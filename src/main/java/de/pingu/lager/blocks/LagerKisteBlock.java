@@ -4,10 +4,12 @@ import de.pingu.lager.PinguLagerSystem;
 import de.pingu.lager.storage.StorageManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 public class LagerKisteBlock {
 
@@ -27,8 +29,11 @@ public class LagerKisteBlock {
     public boolean isLagerKiste(Block block) {
         if (block == null) return false;
         Material type = block.getType();
+        BlockState state = block.getState();
+        String name = null;
+        if (state instanceof Chest chest) name = chest.getCustomName();
         return (type == Material.CHEST || type == Material.TRAPPED_CHEST) &&
-                block.getCustomName() != null && block.getCustomName().contains("§a§lLagerKiste");
+                name != null && name.contains("§a§lLagerKiste");
     }
 
     /**
@@ -39,16 +44,16 @@ public class LagerKisteBlock {
 
         block.setType(Material.CHEST);
         block.getState().update(true);
-        block.setCustomName("§a§lLagerKiste");
 
         Chest chest = (Chest) block.getState();
+        chest.setCustomName("§a§lLagerKiste");
         chest.update();
 
         // Modus und PlotID in Metadaten speichern
-        block.getPersistentDataContainer().set(plugin.getNamespacedKey("LagerKisteMode"),
-                new org.bukkit.persistence.PersistentDataType.STRING(), mode.name());
-        block.getPersistentDataContainer().set(plugin.getNamespacedKey("LagerKistePlotId"),
-                new org.bukkit.persistence.PersistentDataType.STRING(), plotId);
+        chest.getPersistentDataContainer().set(plugin.getNamespacedKey("LagerKisteMode"),
+                PersistentDataType.STRING, mode.name());
+        chest.getPersistentDataContainer().set(plugin.getNamespacedKey("LagerKistePlotId"),
+                PersistentDataType.STRING, plotId);
 
         plugin.getLogger().info(player.getName() + " hat eine LagerKiste auf Plot " + plotId + " platziert (Modus: " + mode + ")");
         return true;
@@ -59,9 +64,13 @@ public class LagerKisteBlock {
      */
     public Mode getMode(Block block) {
         if (!isLagerKiste(block)) return null;
-        String modeStr = block.getPersistentDataContainer().get(plugin.getNamespacedKey("LagerKisteMode"),
-                org.bukkit.persistence.PersistentDataType.STRING);
-        return modeStr != null ? Mode.valueOf(modeStr) : null;
+        BlockState state = block.getState();
+        if (state instanceof Chest chest) {
+            String modeStr = chest.getPersistentDataContainer().get(plugin.getNamespacedKey("LagerKisteMode"),
+                    PersistentDataType.STRING);
+            return modeStr != null ? Mode.valueOf(modeStr) : null;
+        }
+        return null;
     }
 
     /**
@@ -69,8 +78,12 @@ public class LagerKisteBlock {
      */
     public String getPlotId(Block block) {
         if (!isLagerKiste(block)) return null;
-        return block.getPersistentDataContainer().get(plugin.getNamespacedKey("LagerKistePlotId"),
-                org.bukkit.persistence.PersistentDataType.STRING);
+        BlockState state = block.getState();
+        if (state instanceof Chest chest) {
+            return chest.getPersistentDataContainer().get(plugin.getNamespacedKey("LagerKistePlotId"),
+                    PersistentDataType.STRING);
+        }
+        return null;
     }
 
     /**
@@ -78,9 +91,9 @@ public class LagerKisteBlock {
      */
     public boolean addItemToKiste(Block block, ItemStack item) {
         if (!isLagerKiste(block)) return false;
-        if (!(block.getState() instanceof BlockInventoryHolder)) return false;
+        BlockState state = block.getState();
+        if (!(state instanceof BlockInventoryHolder holder)) return false;
 
-        BlockInventoryHolder holder = (BlockInventoryHolder) block.getState();
         holder.getInventory().addItem(item);
         return true;
     }
