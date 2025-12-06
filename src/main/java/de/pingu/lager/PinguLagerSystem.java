@@ -60,9 +60,3 @@ public class PinguLagerSystem extends JavaPlugin {
         getLogger().info("PinguLagerSystem deaktiviert!");
     }
 }
-
-
-    public PlotSquaredHandler getPlotHandler() {
-        return plotHandler;
-    }
-}
