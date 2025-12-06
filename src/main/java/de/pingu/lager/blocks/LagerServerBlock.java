@@ -4,9 +4,10 @@ import de.pingu.lager.PinguLagerSystem;
 import de.pingu.lager.storage.StorageManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class LagerServerBlock {
 
@@ -22,8 +23,13 @@ public class LagerServerBlock {
      * Prüft, ob der Block ein LagerServerBlock ist
      */
     public boolean isLagerServerBlock(Block block) {
-        return block != null && block.getType() == Material.DISPENSER &&
-                block.getCustomName() != null && block.getCustomName().contains("§b§lLagerServer");
+        if (block == null || block.getType() != Material.DISPENSER) return false;
+        BlockState state = block.getState();
+        if (state instanceof Dispenser dispenser) {
+            String name = dispenser.getCustomName();
+            return name != null && name.contains("§b§lLagerServer");
+        }
+        return false;
     }
 
     /**
@@ -38,7 +44,11 @@ public class LagerServerBlock {
 
         // Block setzen
         block.setType(Material.DISPENSER);
-        block.setCustomName("§b§lLagerServer");
+        BlockState state = block.getState();
+        if (state instanceof Dispenser dispenser) {
+            dispenser.setCustomName("§b§lLagerServer");
+            dispenser.update();
+        }
 
         // PlotID speichern
         String plotId = plugin.getPlotHandler().getPlotId(player.getWorld().getUID(), block.getX(), block.getZ());
