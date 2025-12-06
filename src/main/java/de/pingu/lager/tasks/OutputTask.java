@@ -3,6 +3,7 @@ package de.pingu.lager.tasks;
 import de.pingu.lager.PinguLagerSystem;
 import de.pingu.lager.blocks.LagerKisteBlock;
 import de.pingu.lager.storage.StorageManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -12,54 +13,66 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class OutputTask extends BukkitRunnable {
 
     private final PinguLagerSystem plugin;
-    private final LagerKisteBlock lagerKisteBlock;
 
     public OutputTask(PinguLagerSystem plugin) {
         this.plugin = plugin;
-        this.lagerKisteBlock = new LagerKisteBlock(plugin);
     }
 
     @Override
     public void run() {
-
         StorageManager storageManager = plugin.getStorageManager();
+        LagerKisteBlock kisteBlock = new LagerKisteBlock(plugin);
 
-        // Alle registrierten Lagerkisten durchgehen
-        for (Block block : lagerKisteBlock.getAllRegisteredKisten()) {
+        Bukkit.getWorlds().forEach(world -> {
 
-            if (block == null || !(block.getState() instanceof Chest chest)) continue;
+            world.getLoadedChunks();
 
-            // Nur OUTPUT-Kisten
-            if (lagerKisteBlock.getMode(block) != LagerKisteBlock.Mode.OUTPUT) continue;
+            for (var chunk : world.getLoadedChunks()) {
 
-            String plotId = lagerKisteBlock.getPlotId(block);
-            if (plotId == null) continue;
+                int startX = chunk.getX() << 4;
+                int startZ = chunk.getZ() << 4;
 
-            // Prüfen, ob ein Slot frei ist
-            boolean hasSpace = chest.getInventory().firstEmpty() != -1;
-            if (!hasSpace) continue;
+                for (int x = startX; x < startX + 16; x++) {
+                    for (int y = world.getMinHeight(); y < world.getMaxHeight(); y++) {
+                        for (int z = startZ; z < startZ + 16; z++) {
 
-            // Hol dir das PlotStorage und gib das erste Item aus
-            for (ItemStack item : storageManager.getItemsFromPlot(plotId)) {
+                            Block block = world.getBlockAt(x, y, z);
+                            if (block.getType() != Material.CHEST) continue;
 
-                if (item != null && item.getType() != Material.AIR) {
+                            if (!kisteBlock.isLagerKiste(block)) continue;
+                            if (kisteBlock.getMode(block) != LagerKisteBlock.Mode.OUTPUT) continue;
 
-                    // 1 Item pro Tick in die Kiste legen
-                    chest.getInventory().addItem(item.clone());
+                            String plotId = kisteBlock.getPlotId(block);
+                            if (plotId == null) continue;
 
-                    // Item aus Storage entfernen
-                    storageManager.getPlotStorage(plotId).removeItem(item);
-                    storageManager.savePlot(plotId);
+                            Chest chest = (Chest) block.getState();
 
-                    break; // Nur ein Item pro Tick
+                            boolean hasSpace = false;
+                            for (ItemStack slot : chest.getInventory().getContents()) {
+                                if (slot == null || slot.getType() == Material.AIR) {
+                                    hasSpace = true;
+                                    break;
+                                }
+                            }
+                            if (!hasSpace) continue;
+
+                            for (ItemStack item : storageManager.getItemsFromPlot(plotId)) {
+                                if (item != null && item.getType() != Material.AIR) {
+
+                                    chest.getInventory().addItem(item.clone());
+                                    storageManager.getPlotStorage(plotId).removeItem(item);
+                                    storageManager.savePlot(plotId);
+
+                                    return; // exakt 1 Item pro Tick pro Kiste
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
-    /**
-     * Startet den Task alle n Ticks
-     */
     public void start(long ticks) {
         this.runTaskTimerAsynchronously(plugin, 0, ticks);
     }
