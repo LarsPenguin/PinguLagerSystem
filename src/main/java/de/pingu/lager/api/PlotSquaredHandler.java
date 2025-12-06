@@ -16,10 +16,12 @@ public class PlotSquaredHandler {
 
     public PlotSquaredHandler(JavaPlugin plugin) {
         this.plugin = plugin;
+
         if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null) {
             try {
+                // PlotAPI korrekt instanziieren
                 plotAPI = new PlotAPI();
-                plugin.getLogger().info("PlotSquared 7.5.10 erfolgreich initialisiert.");
+                plugin.getLogger().info("PlotSquared erfolgreich initialisiert.");
             } catch (Exception e) {
                 plugin.getLogger().warning("Fehler beim Initialisieren von PlotSquared: " + e.getMessage());
             }
@@ -34,7 +36,9 @@ public class PlotSquaredHandler {
     public String getPlotId(UUID worldUUID, int x, int z) {
         if (plotAPI == null) return worldUUID.toString() + ";" + x + ";" + z;
         Optional<Plot> plotOpt = plotAPI.getPlot(worldUUID, x, z);
-        return plotOpt.map(Plot::getId).map(PlotId::toString).orElse(worldUUID.toString() + ";" + x + ";" + z);
+        return plotOpt.map(Plot::getId)
+                      .map(PlotId::toString)
+                      .orElse(worldUUID.toString() + ";" + x + ";" + z);
     }
 
     /**
@@ -44,5 +48,13 @@ public class PlotSquaredHandler {
         if (plot == null) return "null";
         PlotId id = plot.getId();
         return id.toString();
+    }
+
+    /**
+     * Liefert den Plot an der Position eines Spielers (Optional)
+     */
+    public Optional<Plot> getPlotAt(UUID worldUUID, int x, int z) {
+        if (plotAPI == null) return Optional.empty();
+        return plotAPI.getPlot(worldUUID, x, z);
     }
 }
