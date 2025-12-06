@@ -37,10 +37,10 @@
             <url>https://repo.citizensnpcs.co/repo/</url>
         </repository>
 
-        <!-- Vault Repository -->
+        <!-- JitPack Repository für VaultAPI -->
         <repository>
-            <id>vault-repo</id>
-            <url>https://repo.milkbowl.net/content/repositories/releases/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
 
         <!-- PlotSquared Repository -->
@@ -61,7 +61,7 @@
 
         <!-- Vault -->
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
+            <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
@@ -75,22 +75,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <!-- Maven Compiler Plugin für Java 21 Preview Features -->
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
