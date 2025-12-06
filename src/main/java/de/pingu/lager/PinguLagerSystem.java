@@ -5,6 +5,7 @@ import de.pingu.lager.commands.LagerCommand;
 import de.pingu.lager.listeners.LagerKistenListener;
 import de.pingu.lager.listeners.LagerServerListener;
 import de.pingu.lager.storage.StorageManager;
+import de.pingu.lager.api.PlotSquaredHandler;
 import de.pingu.lager.tasks.InputTask;
 import de.pingu.lager.tasks.OutputTask;
 import org.bukkit.plugin.java.JavaPlugin;
