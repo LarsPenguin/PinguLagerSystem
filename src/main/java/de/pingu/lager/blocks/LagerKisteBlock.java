@@ -40,7 +40,7 @@ public class LagerKisteBlock {
      * Erstellt eine LagerKiste für den Spieler
      */
     public boolean placeLagerKiste(Player player, Block block, Mode mode, String plotId) {
-        if (block == null || !(block.getState() instanceof Chest)) return false;
+        if (block == null) return false; // ❗ alte Chest-Prüfung entfernt
 
         block.setType(Material.CHEST);
         block.getState().update(true);
