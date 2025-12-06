@@ -3,6 +3,7 @@ package de.pingu.lager.tasks;
 import de.pingu.lager.PinguLagerSystem;
 import de.pingu.lager.blocks.LagerKisteBlock;
 import de.pingu.lager.storage.StorageManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -12,47 +13,57 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class InputTask extends BukkitRunnable {
 
     private final PinguLagerSystem plugin;
-    private final LagerKisteBlock lagerKisteBlock;
 
     public InputTask(PinguLagerSystem plugin) {
         this.plugin = plugin;
-        this.lagerKisteBlock = new LagerKisteBlock(plugin);
     }
 
     @Override
     public void run() {
         StorageManager storageManager = plugin.getStorageManager();
+        LagerKisteBlock kisteBlock = new LagerKisteBlock(plugin);
 
-        // Über ALLE registrierten Lagerkisten iterieren
-        for (Block block : lagerKisteBlock.getAllRegisteredKisten()) {
+        Bukkit.getWorlds().forEach(world -> {
 
-            if (block == null || !(block.getState() instanceof Chest chest)) continue;
+            world.getLoadedChunks();
 
-            // Nur INPUT-Kisten
-            if (lagerKisteBlock.getMode(block) != LagerKisteBlock.Mode.INPUT) continue;
+            for (var chunk : world.getLoadedChunks()) {
 
-            String plotId = lagerKisteBlock.getPlotId(block);
-            if (plotId == null) continue;
+                int startX = chunk.getX() << 4;
+                int startZ = chunk.getZ() << 4;
 
-            // Ein Item pro Tick verschieben
-            for (ItemStack item : chest.getInventory().getContents()) {
+                for (int x = startX; x < startX + 16; x++) {
+                    for (int y = world.getMinHeight(); y < world.getMaxHeight(); y++) {
+                        for (int z = startZ; z < startZ + 16; z++) {
 
-                if (item != null && item.getType() != Material.AIR) {
+                            Block block = world.getBlockAt(x, y, z);
+                            if (block.getType() != Material.CHEST) continue;
 
-                    storageManager.addItemToPlot(plotId, item.clone());
+                            if (!kisteBlock.isLagerKiste(block)) continue;
+                            if (kisteBlock.getMode(block) != LagerKisteBlock.Mode.INPUT) continue;
 
-                    // Item aus Kiste entfernen
-                    chest.getInventory().removeItem(item);
+                            String plotId = kisteBlock.getPlotId(block);
+                            if (plotId == null) continue;
 
-                    break; // Pro Tick nur EIN Item
+                            Chest chest = (Chest) block.getState();
+                            ItemStack[] contents = chest.getInventory().getContents();
+
+                            for (ItemStack item : contents) {
+                                if (item != null && item.getType() != Material.AIR) {
+
+                                    storageManager.addItemToPlot(plotId, item.clone());
+                                    chest.getInventory().removeItem(item);
+
+                                    return; // exakt 1 Item pro Tick pro Kiste
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
-    /**
-     * Startet den Task alle n Ticks
-     */
     public void start(long ticks) {
         this.runTaskTimerAsynchronously(plugin, 0, ticks);
     }
