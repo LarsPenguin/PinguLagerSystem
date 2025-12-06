@@ -60,8 +60,10 @@ public class StorageManager {
         for (File file : files) {
             YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
             String plotId = file.getName().replace(".yml", "");
+
             List<ItemStack> items = new ArrayList<>();
             List<String> storedItems = yml.getStringList("items");
+
             for (String s : storedItems) {
                 try {
                     String[] split = s.split(":");
@@ -71,7 +73,12 @@ public class StorageManager {
                 } catch (Exception ignored) {
                 }
             }
-            plotStorageMap.put(plotId, new PlotStorage(plotId, items));
+
+            // WICHTIG: setItems() statt direkter Zuweisung
+            PlotStorage ps = new PlotStorage(plotId);
+            ps.setItems(items);
+
+            plotStorageMap.put(plotId, ps);
         }
     }
 
@@ -86,7 +93,6 @@ public class StorageManager {
     }
 
     public List<ItemStack> getItemsFromPlot(String plotId) {
-        PlotStorage storage = getPlotStorage(plotId);
-        return new ArrayList<>(storage.getItems());
+        return getPlotStorage(plotId).getItems(); // Rückgabe ist nun automatisch eine Kopie
     }
 }
