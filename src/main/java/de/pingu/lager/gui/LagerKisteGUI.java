@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import net.kyori.adventure.text.Component;
 
 public class LagerKisteGUI {
 
@@ -22,10 +23,23 @@ public class LagerKisteGUI {
         if (plotId == null) return;
 
         Inventory inv;
+
         if (mode == LagerKisteBlock.Mode.INPUT) {
-            inv = Bukkit.createInventory(player, 27, "§aLagerKiste INPUT");
+
+            inv = Bukkit.createInventory(
+                    player,
+                    27,
+                    Component.text("§aLagerKiste INPUT") // neu für 1.21+
+            );
+
         } else {
-            inv = Bukkit.createInventory(player, 27, "§aLagerKiste OUTPUT");
+
+            inv = Bukkit.createInventory(
+                    player,
+                    27,
+                    Component.text("§aLagerKiste OUTPUT") // neu für 1.21+
+            );
+
             // OUTPUT: Items aus PlotStorage in GUI
             for (ItemStack item : storageManager.getItemsFromPlot(plotId)) {
                 inv.addItem(item);
