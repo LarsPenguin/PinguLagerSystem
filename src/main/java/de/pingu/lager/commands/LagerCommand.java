@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import net.kyori.adventure.text.Component;
 
 public class LagerCommand implements CommandExecutor {
 
@@ -51,8 +52,10 @@ public class LagerCommand implements CommandExecutor {
             // LagerServer Dispenser erstellen
             ItemStack dispenser = new ItemStack(Material.DISPENSER);
             var meta = dispenser.getItemMeta();
-            meta.displayName(org.bukkit.NamespacedKey.minecraft("§b§lLagerServer"));
-            dispenser.setItemMeta(meta);
+            if (meta != null) {
+                meta.displayName(Component.text("§b§lLagerServer")); // Korrektur für Paper 1.21+
+                dispenser.setItemMeta(meta);
+            }
 
             player.getInventory().addItem(dispenser);
             player.sendMessage(plugin.getConfig().getString("messages.buySuccess"));
