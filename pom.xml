@@ -19,17 +19,34 @@
     </properties>
 
     <repositories>
+        <!-- PaperMC Repository -->
         <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+
+        <!-- Spigot Repository (Snapshots, optional) -->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+
+        <!-- Citizens Repository (optional, falls benötigt) -->
         <repository>
             <id>maven-citizens</id>
             <url>https://repo.citizensnpcs.co/repo/</url>
+        </repository>
+
+        <!-- Vault Repository -->
+        <repository>
+            <id>vault-repo</id>
+            <url>https://repo.milkbowl.net/content/repositories/releases/</url>
+        </repository>
+
+        <!-- PlotSquared Repository -->
+        <repository>
+            <id>plotsquared-repo</id>
+            <url>https://repo.plotsquared.com/maven/</url>
         </repository>
     </repositories>
 
