@@ -1,0 +1,42 @@
+PinguLagerSystem – Proprietary License
+
+Copyright (c) 2025 Leo Kühn / PinguinSolutions
+
+1. Lizenzierung
+Dieses Projekt wird ausschließlich für den persönlichen Gebrauch lizenziert. Jede Nutzung, Vervielfältigung, Verbreitung, Modifikation oder Weitergabe durch Dritte ist **strengstens verboten**, außer es liegt eine **schriftliche Genehmigung des Urhebers** vor.
+
+2. Eigentum
+Alle Rechte, Titel und Interessen an diesem Projekt und seinem Quellcode verbleiben beim Urheber. Der Quellcode ist geistiges Eigentum des Urhebers und wird nicht unter Open-Source-Lizenzen gestellt.
+
+3. Nutzung
+Du darfst das Projekt für eigene Zwecke verwenden, jedoch **nicht** weitergeben, verkaufen oder öffentlich zugänglich machen.
+
+4. Zustimmung
+Die Nutzung dieses Codes impliziert, dass du diese Bedingungen gelesen und akzeptiert hast.
+
+---
+
+Urheber: Leo Kühn
+Datum: 2025-12-07
+
+PinguLagerSystem – Proprietary License
+
+Copyright (c) 2025 Leo Kühn / PinguinSolutions
+
+1. License
+This project is licensed strictly for personal use only. Any use, reproduction, distribution, modification, or sharing by third parties is **strictly prohibited** without **explicit written permission from the copyright holder**.
+
+2. Ownership
+All rights, title, and interest in this project and its source code remain with the copyright holder. The source code is the intellectual property of the copyright holder and is **not** released under any open-source license.
+
+3. Usage
+You may use this project for personal purposes only, but **you may not distribute, sell, or make it publicly available**.
+
+4. Agreement
+Using this code implies that you have read and agree to these terms.
+
+---
+
+Copyright Holder: Leo Kühn
+Date: 2025-12-07
+
