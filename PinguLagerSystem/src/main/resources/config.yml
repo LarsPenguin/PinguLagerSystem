@@ -1,0 +1,8 @@
+economy:
+  serverPrice: 15000.0
+messages:
+  buyFail: "§cDu hast nicht genug Geld!"
+  buySuccess: "§aDu hast den LagerServer gekauft!"
+tasks:
+  inputInterval: 20
+  outputInterval: 20

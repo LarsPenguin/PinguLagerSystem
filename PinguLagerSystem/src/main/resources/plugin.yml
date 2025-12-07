@@ -1,0 +1,14 @@
+name: PinguLagerSystem
+main: de.pingu.lager.PinguLagerSystem
+version: 1.0.0
+api-version: 1.21
+authors: [Pingu]
+commands:
+  lager:
+    description: Hauptbefehl für LagerServer
+    usage: /lager buy
+    permission: pingu.lager.use
+permissions:
+  pingu.lager.use:
+    description: Erlaubt die Nutzung von /lager
+    default: true
