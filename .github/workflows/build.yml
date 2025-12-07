@@ -29,6 +29,7 @@ jobs:
             ${{ runner.os }}-m2
 
       - name: Build with Maven
+        working-directory: ./PinguLagerSystem
         run: mvn -B -e -X package
 
       - name: Upload JAR artifact
